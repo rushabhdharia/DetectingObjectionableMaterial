@@ -9,7 +9,7 @@ from sklearn import svm
 from sklearn.externals import joblib
 data = []
 labels = []
-path = ['assets/nipples', 'assets/banana', 'assets/tablw', 'assets/kissing', 'assets/bed']
+path = ['assets/nipples']
 prediction = []
 
 
@@ -36,8 +36,10 @@ def prep_training_data(im_path):
 
 
 def train(data, labels):
-    model = KNeighborsClassifier()
-    model.fit(data, labels)
+    model = svm.OneClassSVM(cache_size=200, coef0=0.0, degree=3, gamma=5e-05, kernel='rbf',
+      max_iter=-1, nu=0.03761600681140911, random_state=None,
+      shrinking=True, tol=0.001, verbose=False)
+    model.fit(data)
     joblib.dump(model, 'object.pkl')
 
 
@@ -51,9 +53,9 @@ def predict(image_path):
     return prediction
 
 
-# data,labels = prep_training_data(path)
-# train(data,labels)
-pred = predict('image.jpg')
+data,labels = prep_training_data(path)
+train(data,labels)
+pred = predict('nipple1.jpg')
 print pred
 
 
